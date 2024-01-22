@@ -1,0 +1,6 @@
+framework module Pods_TreeFreeNoteTests {
+  umbrella header "Pods-TreeFreeNoteTests-umbrella.h"
+
+  export *
+  module * { export * }
+}

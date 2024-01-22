@@ -1,0 +1,69 @@
+/*
+To design the database structure for a document scanner app or Adobe Scanner app in iOS Swift, with image saving in the document directory and database retrieval, you can consider the following structure:
+
+1. **Document table**: Create a table to store information about the scanned documents. This table will contain columns such as a document identifier, title, creation date, file format, and any other relevant metadata.
+
+```swift
+import SQLite
+
+let documentTable = Table("Document")
+let id = Expression<Int>("id")
+let title = Expression<String>("title")
+let creationDate = Expression<Date>("creationDate")
+let fileFormat = Expression<String>("fileFormat")
+// Other document metadata columns as needed
+```
+
+2. **Page table**: Create a table to store information about the scanned pages within each document. This table should have columns for the page number, image file path (or data), and any additional metadata associated with the page.
+
+```swift
+let pageTable = Table("Page")
+let pageId = Expression<Int>("id")
+let documentId = Expression<Int>("documentId")
+let pageNumber = Expression<Int>("pageNumber")
+let imagePath = Expression<String>("imagePath")
+// Other page metadata columns as needed
+```
+
+3. **Saving Images**: When saving images, you can store the image files in the document directory of your iOS app and save the file path in the database.
+
+```swift
+func saveImageToDocumentDirectory(_ image: UIImage) -> String? {
+    // Generate a unique file name or use a naming convention based on your requirements
+    let fileName = "image_\(UUID().uuidString).png"
+    
+    // Get the URL for the document directory
+    if let documentDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first {
+        let fileURL = documentDirectory.appendingPathComponent(fileName)
+        
+        // Convert the image to PNG data and write it to the file URL
+        if let imageData = image.pngData() {
+            do {
+                try imageData.write(to: fileURL)
+                return fileURL.path
+            } catch {
+                print("Error saving image to document directory: \(error)")
+            }
+        }
+    }
+    
+    return nil
+}
+```
+
+4. **Retrieving Images**: To retrieve images from the document directory based on the file paths stored in the database, you can load the image data from the file paths.
+
+```swift
+func loadImageFromDocumentDirectory(_ imagePath: String) -> UIImage? {
+    let fileURL = URL(fileURLWithPath: imagePath)
+    if let imageData = try? Data(contentsOf: fileURL) {
+        return UIImage(data: imageData)
+    }
+    return nil
+}
+```
+
+With this structure, you can store information about scanned documents in the database, save the image files in the document directory, and retrieve images by loading the image data from the file paths stored in the database. Remember to handle database operations (e.g., creating tables, inserting data, querying data) using appropriate SQLite APIs or libraries like SQLite.swift.
+
+
+*/

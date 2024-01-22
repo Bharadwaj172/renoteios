@@ -1,0 +1,53 @@
+/*
+
+To design the database structure for a document scanner app or Adobe Scanner app in iOS, you can consider the following data structure:
+
+1. **Document table**: Create a table to store information about the scanned documents. This table will contain columns such as a document identifier, title, creation date, file format, and any other relevant metadata.
+
+```swift
+CREATE TABLE Document (
+    id INTEGER PRIMARY KEY,
+    title TEXT,
+    creationDate DATETIME,
+    fileFormat TEXT,
+    -- Other document metadata columns
+);
+```
+
+2. **Page table**: Create a table to store information about the scanned pages within each document. This table should have columns for the page number, image file path or data, and any additional metadata associated with the page.
+
+```swift
+CREATE TABLE Page (
+    id INTEGER PRIMARY KEY,
+    documentId INTEGER,
+    pageNumber INTEGER,
+    imagePath TEXT,
+    -- Other page metadata columns
+    FOREIGN KEY (documentId) REFERENCES Document(id)
+);
+```
+
+In this structure, the `documentId` column in the `Page` table serves as a foreign key that references the `id` column in the `Document` table, establishing a relationship between the document and its pages.
+
+3. **Tag table (optional)**: If you want to implement tagging functionality for documents, you can create a separate table to store tags and establish a many-to-many relationship with documents.
+
+```swift
+CREATE TABLE Tag (
+    id INTEGER PRIMARY KEY,
+    name TEXT
+);
+
+CREATE TABLE DocumentTag (
+    documentId INTEGER,
+    tagId INTEGER,
+    PRIMARY KEY (documentId, tagId),
+    FOREIGN KEY (documentId) REFERENCES Document(id),
+    FOREIGN KEY (tagId) REFERENCES Tag(id)
+);
+```
+
+The `DocumentTag` table serves as a junction table to associate tags with documents. Each row represents a connection between a document and a tag.
+
+With this database structure, you can store information about scanned documents, their pages, and optionally implement tagging functionality. You can perform various database operations such as creating new documents, adding pages, retrieving documents and their pages, and managing tags (if applicable) using appropriate SQL statements or an ORM (Object-Relational Mapping) framework like Core Data or SQLite.swift.
+
+*/
